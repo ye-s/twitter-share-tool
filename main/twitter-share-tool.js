@@ -4,26 +4,27 @@ var txtSelection = {};
 var arrowKeys = [37, 38, 39, 40];
 
 function getSelectionText() {
-    var shareButtonContainer, 
-        selectedTextArea = document.activeElement;
+  var shareButtonContainer; 
+  var selectedTextArea = document.activeElement;
 
-    txtSelection = window.getSelection();
-    if (!isSelectionValid(txtSelection)) {
-      showSharingTool = false;
-      return;
-    }
+  txtSelection = window.getSelection();
+  if (!isSelectionValid(txtSelection)) {
+    showSharingTool = false;
+    return;
+  }
 
-    shareButtonContainer = document.querySelector('.tst-tooltip-container');
-    showTooltip(txtSelection, shareButtonContainer);
-    closeSharingTool(shareButtonContainer);
+  shareButtonContainer = document.querySelector('.tst-tooltip-container');
+  showTooltip(txtSelection, shareButtonContainer);
+  closeSharingTool(shareButtonContainer);
 }
 
 // returns selected html elements
 function getSelectedHTML(sel) {
-  var i, range, 
-    resultHTML = '',
-    len = sel.rangeCount, 
-    container = document.createElement("div");
+  var i; 
+  var range; 
+  var resultHTML = '';
+  var len = sel.rangeCount; 
+  var container = document.createElement("div");
 
   for (i = 0, len; i < len; ++i) {
     container.appendChild(sel.getRangeAt(i).cloneContents());
@@ -35,10 +36,10 @@ function getSelectedHTML(sel) {
 
 // checks selected text for empty tags and block elements
 function isSelectionValid(selection) {
-  var divTag = '<div>',   
-    isValid = false,
-    emptyElementsRegex = /<[^\/>][^>]*><\/[^>]+>/g,
-    contentElementsRegex = /<(div|p|h1|h2|h3|h4|h5|h6|ul|li|ol)[^>]*>/g;
+  var divTag = '<div>';   
+  var isValid = false;
+  var emptyElementsRegex = /<[^\/>][^>]*><\/[^>]+>/g;
+  var contentElementsRegex = /<(div|p|h1|h2|h3|h4|h5|h6|ul|li|ol)[^>]*>/g;
 
   if (!selection || selection.isCollapsed || !selection.rangeCount) {
       return isValid;
@@ -58,8 +59,8 @@ function isSelectionValid(selection) {
 
 // get common Parent node for all selected text
 function getParentNode(selection) {
-  var range, 
-    parentNodes = '';
+  var range; 
+  var parentNodes = '';
 
   if (selection.getRangeAt(0)) {
     range = selection.getRangeAt(0);
@@ -73,11 +74,12 @@ function getParentNode(selection) {
 }
 
 function showTooltip(selection, shareButtonContainer) {
-  var firstLine, secondLine,
-      xPosition, yPosition,
-      calculatedPosition = {},
-      range = selection.getRangeAt(0),
-      clientRects = range.getClientRects();
+  var firstLine;
+  var xPosition; 
+  var yPosition;
+  var calculatedPosition = {};
+  var range = selection.getRangeAt(0);
+  var clientRects = range.getClientRects();
 
   // first line (rectangle) with text
   firstLine = clientRects[0];
@@ -89,7 +91,7 @@ function showTooltip(selection, shareButtonContainer) {
   if (clientRects.length < 2) {
     xPosition = Math.round(firstLine.left + (firstLine.width / 2));
   } else {
-    secondLine = clientRects[1];
+    var secondLine = clientRects[1];
     var maxLeftPos = Math.round(secondLine.left);
     var maxRightPos = Math.round(firstLine.right)
     xPosition = maxLeftPos + ((maxRightPos - maxLeftPos) / 2);
@@ -108,17 +110,17 @@ function showTooltip(selection, shareButtonContainer) {
   if (!(shareButtonContainer.className).match('tst-visible')) {
     shareButtonContainer.className += ' tst-visible';
   }
-  addTwitterButton(shareButtonContainer, selection);
+  addTwitterButton(selection);
   showSharingTool = true;
 
 }
 
 // margin size and topScrolled are used with absolute tooltip position,
 function applyAbsolutePositionFix(xPos, yPos) {
-  var topScrolled = 0,
-      containerLeftMargin = 0,
-      position = {},
-      contentContainer = document.querySelector('.tst-content-container');
+  var topScrolled = 0;
+  var containerLeftMargin = 0;
+  var position = {};
+  var contentContainer = document.querySelector('.tst-content-container');
 
   containerLeftMargin = Math.round(parseFloat(window
                     .getComputedStyle(contentContainer, null)
@@ -130,9 +132,9 @@ function applyAbsolutePositionFix(xPos, yPos) {
   position.y =  yPos + topScrolled;
 
   return position;
-  }
+}
 
-function addTwitterButton(shareButtonContainer, selection) {
+function addTwitterButton(selection) {
   var shareButton = document.getElementById('twitter-share-button');
   shareButton.href = 'https://twitter.com/intent/tweet?text=' + prepareText(selection);
 }
@@ -151,7 +153,7 @@ function closeSharingTool(tooltipDiv) {
   var closeSharingToolHandler = function (e) {
     if (!tooltipDiv.contains(e.target) && !showSharingTool) {
       tooltipDiv.classList.remove('tst-visible');
-      txtSelection = txtSelection.removeAllRanges();
+      txtSelection = txtSelection ? txtSelection.removeAllRanges() : null;
     }
     document.removeEventListener('mouseup', closeSharingToolHandler);
   };
@@ -160,20 +162,20 @@ function closeSharingTool(tooltipDiv) {
 
 // common method to calculate pop-up window position in center of screen
 function showCenteredPopUp(url) {
-    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-    var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+  var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+  var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
 
-    var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+  var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+  var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
-    var left = ((width / 2) - (600 / 2)) + dualScreenLeft;
-    var top = ((height / 2) - (300 / 2)) + dualScreenTop;
+  var left = ((width / 2) - (600 / 2)) + dualScreenLeft;
+  var top = ((height / 2) - (300 / 2)) + dualScreenTop;
 
-    var newWindow = window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600, top=' + top + ', left=' + left);
+  var newWindow = window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600, top=' + top + ', left=' + left);
 
-    if (window.focus) {
-        newWindow.focus();
-    }
+  if (window.focus) {
+      newWindow.focus();
+  }
 }
 
 document.onmouseup = getSelectionText;
